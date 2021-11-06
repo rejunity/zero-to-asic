@@ -31,10 +31,6 @@ On OSX (for more details visit [Tobias Müller's blog](https://www.twam.info/sof
     brew install nextpnr --without-arch-ecp5
 
 
-### ASIC
-TODO
-
-
 ## Projects
 Projects below are based upon:
 * [Matt's VGA Clock repo](https://github.com/mattvenn/vga-clock)
@@ -51,3 +47,6 @@ Run on FPGA:
     make prog
 
 ### FlappySpace
+
+## ASIC
+TODO
