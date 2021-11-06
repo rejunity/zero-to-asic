@@ -23,11 +23,12 @@ set_io -nowarn FLASH_IO1  17
 set_io -nowarn FLASH_IO2  12
 set_io -nowarn FLASH_IO3  13
 
-set_io -nowarn hsync       47
-set_io -nowarn vsync       45
-set_io -nowarn rgb[2]      3
-set_io -nowarn rgb[1]      4
-set_io -nowarn rgb[0]      2
+# Digilent VGA PMOD
+set_io -nowarn hsync      42
+set_io -nowarn vsync      36
+set_io -nowarn rgb[2]     45    # (high) R3:45, R2:47, R1: 2, R0: 4 (low intensity)
+set_io -nowarn rgb[1]     31    # (high) G3:31, G2:34, G1:38, G0:43 (low intensity)
+set_io -nowarn rgb[0]     44    # (high) B3:44, B2:46, B1:48, B0: 3 (low intensity)
 
 # PMOD 1A
 set_io -nowarn P1A1        4
