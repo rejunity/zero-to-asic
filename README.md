@@ -43,4 +43,12 @@ Projects below are based upon:
 * [Steven Hugg's FPGA examples for 8bitworkshop.com](https://github.com/sehugg/fpga-examples)
 
 ### Starfield
+Run simulation:
+
+    make verilator && ./obj_dir/VStarfield
+    
+Run on FPGA:
+
+    make prog
+
 ### FlappySpace
