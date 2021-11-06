@@ -9,6 +9,7 @@ module top (
 );
 
     wire px_clk;
+    wire reset;
 
     // Generated values for pixel clock of 31.5Mhz and 72Hz frame frecuency.
     // # icepll -i12 -o31.5
@@ -37,19 +38,39 @@ module top (
         ) uut (
             .RESETB    (1'b1  ),
             .BYPASS    (1'b0  ),
+            .LOCK      (lock  ),
             .PACKAGEPIN(clk   ),
             .PLLOUTCORE(px_clk)
         );
+
+        // Note that reset_n is connected to the physical button on the FPGA board
+        // and it does NOT seem to be driven LOW during the initialisation.
+        //
+        // To detect initialisation we are going to use inverted PLL.LOCK instead.
+        // Judging from the "LATTICE ICE Technology Library" documentation
+        // PLL.LOCK is held LOW during the PLL and board initialisation.
+        // See: "LATTICE ICE Technology Library" doc
+        // > LOCK: Output port, when HIGH, indicates that the signal on PLLOUTGLOBAL/PLLOUTCORE
+        // > is locked to the PLL source on PACKAGEPIN.
+        //
+        // Also see: https://github.com/YosysHQ/yosys/issues/103#issuecomment-159965426
+        // > When you are using the PLLs you can directly use the PLL LOCK control
+        // > output as reset signal.
+        //
+        wire lock;
+        assign reset = !lock | !reset_n;
     `else
         assign px_clk = clk;
+        assign reset = !reset_n;
     `endif
+
 
     starfield i_starfield(
         .clk  (px_clk),
-        .reset(!reset_n),
-        .hsync(hsync   ),
-        .vsync(vsync   ),
-        .rgb  (rgb     )
+        .reset(reset ),
+        .hsync(hsync ),
+        .vsync(vsync ),
+        .rgb  (rgb   )
     );
 
 endmodule
