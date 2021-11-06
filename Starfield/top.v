@@ -44,14 +44,12 @@ module top (
         assign px_clk = clk;
     `endif
 
-    wire reset;
-    assign reset = !reset_n;
-    starfield i_starfield_512x256 (
+    starfield i_starfield(
         .clk  (px_clk),
-        .reset(reset ),
-        .hsync(hsync ),
-        .vsyn (vsync ),
-        .rgb  (rgb   )
+        .reset(!reset_n),
+        .hsync(hsync   ),
+        .vsync(vsync   ),
+        .rgb  (rgb     )
     );
 
 endmodule
