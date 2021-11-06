@@ -15,7 +15,7 @@ On OSX using [Brew](https://brew.sh/):
 
 *NOTE: Theoretically installing verilator through [MacPorts](https://www.macports.org/) should work too, however I ran into the verilator compilation problems this way.*
 
-### FPGA
+### Hardware
 Use [1 Bit Squared icebreaker FPGA board](https://1bitsquared.com/products/icebreaker) with [Digilent VGA pmod](https://digilent.com/shop/pmod-vga-video-graphics-array/) plugged into pmod1a and pmod1b.
 
 To build binaries and deploy them onto FPGA you will need to have [yosys](https://yosyshq.net/yosys/), [nextpnr](https://github.com/YosysHQ/nextpnr) and [icestorm](http://www.clifford.at/icestorm/) installed.
@@ -24,13 +24,12 @@ On Linux:
 
     TODO
 
-On OSX:
+On OSX (for more details visit [Tobias Müller's blog](https://www.twam.info/software/using-the-icebreaker-with-an-open-source-fpga-toolchain-on-os-x)):
 
     brew tap twam/openfgpa
     brew install yosys icestorm
     brew install nextpnr --without-arch-ecp5
 
-NOTE: detailed instructions can be found on [Tobias Müller's blog](https://www.twam.info/software/using-the-icebreaker-with-an-open-source-fpga-toolchain-on-os-x)
 
 ### ASIC
 TODO
