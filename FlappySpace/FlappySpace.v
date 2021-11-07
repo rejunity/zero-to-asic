@@ -9,8 +9,8 @@ module flappy_space(clk, reset, hsync, vsync, rgb);
   output hsync, vsync;
   output [2:0] rgb;
   wire display_on;
-  reg [9:0] hpos;
-  reg [9:0] vpos;
+  wire [9:0] hpos;
+  wire [9:0] vpos;
   reg [15:0] lfsr;
   reg [14:0] lfsr2;
   reg [13:0] lfsr3;
@@ -31,9 +31,9 @@ module flappy_space(clk, reset, hsync, vsync, rgb);
   );
 
   // enable LFSR only in 256x256 area
-  wire star_enable =                        !hpos[8] & !vpos[8] & !hpos[9] & !vpos[9];
-  wire star2_enable = !hpos[0] &            !hpos[8] & !vpos[8] & !hpos[9] & !vpos[9];
-  wire star3_enable = !hpos[0] & !hpos[1] & !hpos[8] & !vpos[8] & !hpos[9] & !vpos[9];
+  wire star_enable =  !hpos[8] & !vpos[8] & !hpos[9] & !vpos[9];
+  wire star2_enable = star_enable & !hpos[0];
+  wire star3_enable = star_enable & !hpos[0] & !hpos[1];
 
   // LFSR with period = 2^16-1 = 256*256-1
   //LFSR #(16'b1000000001011,0) lfsr_gen(
