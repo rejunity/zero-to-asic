@@ -47,6 +47,13 @@ Run on FPGA:
     make prog
 
 ### FlappySpace
+Run simulation:
+
+    make verilator && ./obj_dir/VFlappySpace
+    
+Run on FPGA:
+
+    make prog
 
 ## ASIC
 TODO
