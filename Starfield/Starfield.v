@@ -101,7 +101,7 @@ module starfield(clk, reset, hsync, vsync, rgb);
 
   reg [HIGHEST_BIT:0] lfsr;
 
-  VgaSyncGen vga_0(
+  VgaSyncGen vga(
     .px_clk(clk),
     .reset(reset),
     .hsync(hsync),

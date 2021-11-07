@@ -1,42 +1,40 @@
-
-`include "hvsync_generator.v"
+`default_nettype none
 
 /*
-Scrolling starfield generator using a period (2^16-1) LFSR.
+Scrolling procedural background using several LFSRs.
 */
-
-module starfield_top(clk, reset, hsync, vsync, rgb);
+module flappy_space(clk, reset, hsync, vsync, rgb);
 
   input clk, reset;
   output hsync, vsync;
   output [2:0] rgb;
   wire display_on;
-  wire [8:0] hpos;
-  wire [8:0] vpos;
-  wire [15:0] lfsr;
-  wire [14:0] lfsr2;
-  wire [13:0] lfsr3;
-  wire [7:0] lfsr_, lfsr__;
-  wire [6:0] lfsr_2, lfsr__2;
-  wire [8:0] mount, mount_;
-  wire [8:0] mount2, mount2_;
-  wire [4:0] frame;
+  reg [9:0] hpos;
+  reg [9:0] vpos;
+  reg [15:0] lfsr;
+  reg [14:0] lfsr2;
+  reg [13:0] lfsr3;
+  reg [7:0] lfsr_, lfsr__;
+  reg [6:0] lfsr_2, lfsr__2;
+  reg [9:0] mount, mount_;
+  reg [9:0] mount2, mount2_;
+  reg [4:0] frame;
 
-  hvsync_generator hvsync_gen(
-    .clk(clk),
+  VgaSyncGen vga(
+    .px_clk(clk),
     .reset(reset),
     .hsync(hsync),
     .vsync(vsync),
-    .display_on(display_on),
-    .hpos(hpos),
-    .vpos(vpos)
+    .x_px(hpos),
+    .y_px(vpos),
+    .activevideo(display_on)
   );
-  
+
   // enable LFSR only in 256x256 area
-  wire star_enable = !hpos[8] & !vpos[8];
-  wire star2_enable = !hpos[0] & !hpos[8] & !vpos[8];
-  wire star3_enable = !hpos[0] & !hpos[1] & !hpos[8] & !vpos[8];
-  
+  wire star_enable =                        !hpos[8] & !vpos[8] & !hpos[9] & !vpos[9];
+  wire star2_enable = !hpos[0] &            !hpos[8] & !vpos[8] & !hpos[9] & !vpos[9];
+  wire star3_enable = !hpos[0] & !hpos[1] & !hpos[8] & !vpos[8] & !hpos[9] & !vpos[9];
+
   // LFSR with period = 2^16-1 = 256*256-1
   //LFSR #(16'b1000000001011,0) lfsr_gen(
 /*
@@ -59,13 +57,13 @@ module starfield_top(clk, reset, hsync, vsync, rgb);
     .lfsr(lfsr3));
 */
 
-  
-  always_ff @(posedge clk)
+
+  always @(posedge clk)
     begin
       if (hpos == 0 && vpos == 0) begin
         frame <= frame + 1;
       end
-              
+
       if (star_enable)
         lfsr <= {1'b0, lfsr[15:1]} ^ (lfsr[0] ? 16'b1101000000001000 : 16'b0);
       if (star2_enable)
@@ -102,7 +100,7 @@ module starfield_top(clk, reset, hsync, vsync, rgb);
       end
 
 
-      
+
       if (reset) frame <= 0;
       if (reset) lfsr <=  16'b1100010001010111;
       if (reset) lfsr2 <= 15'b110001000110111;
@@ -117,13 +115,13 @@ module starfield_top(clk, reset, hsync, vsync, rgb);
       if (reset) mount2 <=  180;//6'b110000;
     end
 
-  
-  assign rgb = 
+
+  assign rgb =
     (star_enable && (&lfsr[15:7]) ? lfsr[2:0] : 0) +
     (star2_enable && (&lfsr2[14:6]) ? lfsr2[2:0] : 0) +
     (star3_enable && (&lfsr3[13:7]) ? lfsr3[2:0] : 0) +
     ((star_enable && mount < vpos) ? 2 : 0) +
     ((star_enable && mount2 < vpos) ? 1 : 0);
-  
-endmodule
 
+endmodule
+`default_nettype wire
