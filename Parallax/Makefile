@@ -70,7 +70,7 @@ verilator: obj_dir/VParallax.h
 	cd obj_dir && make -f VParallax.mk
 
 clean:
-	rm -f ${PROJECT}.json ${PROJECT}.asc ${PROJECT}.bin *log
+	rm -f ${PROJECT}.json ${PROJECT}.asc ${PROJECT}.bin *log *vcd *vvp
 	rm -rf obj_dir
 
 #secondary needed or make will remove useful intermediate files
