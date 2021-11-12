@@ -14,7 +14,9 @@ FREQ = 31.5
 SIM_DEFINES = -DFUNCTIONAL -DSIM
 SIM?=RTL
 
-all: $(PROJECT).bin
+all: $(PROJECT).bin parallax_test_tb
+
+test: parallax_test_tb
 
 BUILD_DIR = ./
 SOURCES = VgaSyncGen.v Parallax.v top.v
@@ -28,8 +30,8 @@ CFLAGS = -O3 -Iobj_dir -I/usr/share/verilator/include
 LDFLAGS = -lSDL2 -lSDL2_image
 
 ## Simulation mode: RTL/GL
-test_tb:
-	iverilog -o test.out  $(SOURCES) parallax_test_tb.v -DDEBUG
+parallax_test_tb:
+	iverilog -o test.out  $(SOURCES) parallax_test_tb.v
 	vvp test.out -fst
 
 %.vvp: %_tb.v

@@ -63,13 +63,13 @@ module parallax_test_tb;
 		$finish;
 	end
 
-	// always @(io_out) begin
-	// 	#1 $display("RGB=%b   HSYNC=%b VSYNC=%b", rgb, hsync, vsync);
-	// 	if (rgb != 0 && vsync != 1)
-	// 		$display("005 failed, RGB signal inside VSYNC");
-	// 	if (rgb != 0 && hsync != 1)
-	// 		$display("005 failed, RGB signal inside HSYNC");
-	// end
+	always @(io_out) begin
+		//#1 $display("RGB=%b   HSYNC=%b VSYNC=%b", rgb, hsync, vsync);
+		if (rgb != 0 && vsync != 1)
+			$display("005 failed, RGB signal inside VSYNC");
+		if (rgb != 0 && hsync != 1)
+			$display("005 failed, RGB signal inside HSYNC");
+	end
 
 	initial begin
 		wait(hsync == 1);
