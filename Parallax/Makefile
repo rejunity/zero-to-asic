@@ -11,6 +11,9 @@ PACKAGE = sg48
 # target freq for vga panel
 FREQ = 31.5
 
+SIM_DEFINES = -DFUNCTIONAL -DSIM
+SIM?=RTL
+
 all: $(PROJECT).bin
 
 BUILD_DIR = ./
@@ -23,6 +26,23 @@ SOURCES = VgaSyncGen.v Parallax.v top.v
 CFLAGS = -O3 -Iobj_dir -I/usr/share/verilator/include
 
 LDFLAGS = -lSDL2 -lSDL2_image
+
+## Simulation mode: RTL/GL
+test_tb:
+	iverilog -o test.out  $(SOURCES) parallax_test_tb.v -DDEBUG
+	vvp test.out -fst
+
+%.vvp: %_tb.v
+ifeq ($(SIM),RTL)
+	iverilog $(SIM_DEFINES) -I $(PDK_PATH) \
+	$< -o $@
+else
+	iverilog $(SIM_DEFINES) -DGL -I $(PDK_PATH) \
+	$< -o $@
+endif
+
+%.vcd: %.vvp
+	vvp $<
 
 # rules for building the json
 %.json: $(SOURCES)
