@@ -17,6 +17,8 @@
 
 `timescale 1 ns / 1 ps
 
+//`define SHORT_TEST // check just a portion of the frame, instead of 2 full frames
+
 module parallax_test_tb;
 	reg clock;
 	reg reset;
@@ -74,7 +76,11 @@ module parallax_test_tb;
 	initial begin
 		wait(hsync == 1);
 		#1;
-		repeat (2) begin // check 2 frames
+		`ifdef SHORT_TEST
+		repeat (1) begin // check just a portion of the frame
+		`else
+		repeat (1) begin // check 2 frames
+		`endif
 			if (hsync != 1 ||
 				vsync != 1 ||
 				rgb != 0) $display("000 failed! io_out=%b", io_out);
@@ -112,14 +118,21 @@ module parallax_test_tb;
 
 			// ACTIVE
 			$display("Visible portion of the frame started");
+			`ifdef SHORT_TEST
+			repeat (10) begin
+			`else
 			repeat (480) begin
+			`endif
 				wait(hsync == 0);
 				wait(hsync == 1);
 				if (vsync != 1) $display("004 failed! io_out=%b", io_out);
 				$display("ACTIVE line started");
 			end
 
+			`ifdef SHORT_TEST
+			`else
 			$display("Frame ended");
+			`endif
 		end
 
 		`ifdef GL
