@@ -10,6 +10,13 @@ module parallax(
     output vsync,
     output [2:0] rgb
 );
+
+  localparam TAPS_16 = 16'b1101000000001000;
+  localparam TAPS_15 = 15'b110000000000000;
+  localparam TAPS_14 = 14'b11100000000010;
+  localparam TAPS_8  =  8'b10111000;
+  localparam TAPS_7  =  7'b1100000;
+
   wire display_on;
   wire [9:0] hpos;
   wire [9:0] vpos;
@@ -37,28 +44,6 @@ module parallax(
   wire star2_enable = star_enable & !hpos[0];
   wire star3_enable = star_enable & !hpos[0] & !hpos[1];
 
-  // LFSR with period = 2^16-1 = 256*256-1
-  //LFSR #(16'b1000000001011,0) lfsr_gen(
-/*
-  LFSR #(16'b1000000001011,0) lfsr_gen(
-    .clk(clk),
-    .reset(reset),
-    .enable(star_enable),
-    .lfsr(lfsr));
-
-  LFSR #(15'b00000000011,0) lfsr_gen2(
-    .clk(clk),
-    .reset(reset),
-    .enable(star2_enable),
-    .lfsr(lfsr2));
-
-  LFSR #(14'b0000000011,0) lfsr_gen3(
-    .clk(clk),
-    .reset(reset),
-    .enable(star3_enable),
-    .lfsr(lfsr3));
-*/
-
 
   always @(posedge clk)
     begin
@@ -67,14 +52,14 @@ module parallax(
       end
 
       if (star_enable)
-        lfsr <= {1'b0, lfsr[15:1]} ^ (lfsr[0] ? 16'b1101000000001000 : 16'b0);
+        lfsr <= {1'b0, lfsr[15:1]} ^ (lfsr[0] ? TAPS_16 : 16'b0);
       if (star2_enable)
-        lfsr2 <= {1'b0, lfsr2[14:1]} ^ (lfsr2[0] ? 15'b110000000000000 : 15'b0);
+        lfsr2 <= {1'b0, lfsr2[14:1]} ^ (lfsr2[0] ? TAPS_15 : 15'b0);
       if (star3_enable)
-        lfsr3 <= {1'b0, lfsr3[13:1]} ^ (lfsr3[0] ? 14'b11100000000010 : 14'b0);
+        lfsr3 <= {1'b0, lfsr3[13:1]} ^ (lfsr3[0] ? TAPS_14 : 14'b0);
 
       if (hpos < 6 && vpos == 1) begin
-        lfsr__ <= {1'b0, lfsr__[7:1]} ^ (lfsr__[0] ? 8'b10111000 : 8'b0);
+        lfsr__ <= {1'b0, lfsr__[7:1]} ^ (lfsr__[0] ? TAPS_8 : 8'b0);
         mount_ <= lfsr__[0] ? mount_ + 1: mount_ - 1;
       end
       else if (hpos == 0) begin
@@ -82,13 +67,13 @@ module parallax(
         mount <= mount_;
       end
       else if (star_enable) begin
-        lfsr_ <= {1'b0, lfsr_[7:1]} ^ (lfsr_[0] ? 8'b10111000 : 8'b0);
+        lfsr_ <= {1'b0, lfsr_[7:1]} ^ (lfsr_[0] ? TAPS_8 : 8'b0);
         mount <= lfsr_[0] ? mount + 1: mount - 1;
       end
 
       if (hpos < 3 && vpos == 1) begin
         if (hpos[0] == frame[0])
-          lfsr__2 <= {1'b0, lfsr__2[6:1]} ^ (lfsr__2[0] ? 7'b1100000 : 7'b0);
+          lfsr__2 <= {1'b0, lfsr__2[6:1]} ^ (lfsr__2[0] ? TAPS_7 : 7'b0);
         mount2_ <= lfsr__2[0] ? mount2_ + 1: mount2_ - 1;
       end
       else if (hpos == 0) begin
@@ -97,7 +82,7 @@ module parallax(
       end
       else if (star_enable) begin
         if (hpos[0] == frame[0])
-          lfsr_2 <= {1'b0, lfsr_2[6:1]} ^ (lfsr_2[0] ? 7'b1100000 : 7'b0);
+          lfsr_2 <= {1'b0, lfsr_2[6:1]} ^ (lfsr_2[0] ? TAPS_7 : 7'b0);
         mount2 <= lfsr_2[0] ? mount2 + 1: mount2 - 1;
       end
 
