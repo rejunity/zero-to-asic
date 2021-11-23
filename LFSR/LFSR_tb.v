@@ -2,6 +2,19 @@
 
 `timescale 1 ns / 1 ps
 
+// Expected output:
+// The longest 8-bit sequence with 0/1 symmetry at bit [0] reached after 254 clocks with the value: 01101111
+// The longest 8-bit sequence with 0/1 symmetry at bit [1] reached after 510 clocks with the value: 10001111
+// The longest 8-bit sequence with 0/1 symmetry at bit [2] reached after 768 clocks with the value: 11011011
+// The longest 8-bit sequence with 0/1 symmetry at bit [3] reached after 1024 clocks with the value: 11010101
+// The longest 8-bit sequence with 0/1 symmetry at bit [4] reached after 1278 clocks with the value: 11011011
+// The longest 8-bit sequence with 0/1 symmetry at bit [5] reached after 1512 clocks with the value: 00100111
+// The longest 8-bit sequence with 0/1 symmetry at bit [6] reached after 1792 clocks with the value: 10001100
+// The longest 8-bit sequence with 0/1 symmetry at bit [7] reached after 2048 clocks with the value: 01000110
+// 16'b0100111011001001 after (320*200-1)=63999 clocks with TAPS=16'b1101000000001000 and SEED=0xffff
+// 17'b11011110000101111 after (320*240-1)=76799 clocks with TAPS=17'b10010000000000000 and SEED=0x1ffff
+// 18'b110100101100010001 after (480*320-1)=153599 clocks with TAPS=18'b100000010000000000 and SEED=0x3ffff
+// 19'b1010100000000110111 after (640*480-1)=307199 clocks with TAPS=19'b1110010000000000000 and SEED=0x7ffff
 
 module LFSR_tb;
 	reg [18:0] lfsr_19bit;
