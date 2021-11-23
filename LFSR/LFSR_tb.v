@@ -72,7 +72,7 @@ module LFSR_tb;
 		lfsr_17bit <= {1'b0, lfsr_17bit[16:1]} ^ (lfsr_17bit[0] ? TAPS_17 : 17'b0);
 		lfsr_16bit <= {1'b0, lfsr_16bit[15:1]} ^ (lfsr_16bit[0] ? TAPS_16 : 16'b0);
 		lfsr_8bit  <= {1'b0, lfsr_8bit[7:1]} ^ (lfsr_8bit[0] ? TAPS_8 : 8'b0);
- 	end
+	end
 
 	localparam TAPS_19 = 19'b1110010000000000000;
 	localparam TAPS_18 = 18'b100000010000000000;
