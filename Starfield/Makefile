@@ -13,6 +13,10 @@ FREQ = 31.5
 
 all: $(PROJECT).bin
 
+lfsr:
+	iverilog -o LFSR_tb.out  $(SOURCES) LFSR_tb.v
+	vvp LFSR_tb.out -fst
+
 BUILD_DIR = ./
 SOURCES = VgaSyncGen.v Starfield.v top.v
 
@@ -28,10 +32,10 @@ LDFLAGS = -lSDL2 -lSDL2_image
 %.json: $(SOURCES)
 	yosys -l yosys.log -DSYNTH -p 'synth_ice40 -top top -json $(PROJECT).json' $(SOURCES)
 
-%.asc: %.json $(ICEBREAKER_PIN_DEF) 
+%.asc: %.json $(ICEBREAKER_PIN_DEF)
 	nextpnr-ice40 -l nextpnr.log --seed $(SEED) --freq $(FREQ) --package $(PACKAGE) --$(DEVICE) --asc $@ --pcf $(PIN_DEF) --json $<
 
-gui: $(PROJECT).json $(ICEBREAKER_PIN_DEF) 
+gui: $(PROJECT).json $(ICEBREAKER_PIN_DEF)
 	nextpnr-ice40 --gui -l nextpnr.log --seed $(SEED) --freq $(FREQ) --package $(PACKAGE) --$(DEVICE) --asc $(PROJECT).asc --pcf $(PIN_DEF) --json $(PROJECT).json
 
 # bin, for programming
